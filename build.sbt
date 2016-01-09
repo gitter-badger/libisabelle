@@ -88,7 +88,8 @@ lazy val root = project.in(file("."))
     pideInterface, libisabelle, setup,
     tests, docs, examples,
     appTemplate, appBootstrap, appReport, appCli,
-    pide2014, pide2015, pide2016
+    pide2014, pide2015, pide2016,
+    refined
   )
 
 lazy val docs = project.in(file("docs"))
@@ -179,6 +180,31 @@ def pide(version: String) = Project(s"pide$version", file(s"pide/$version"))
 lazy val pide2014 = pide("2014")
 lazy val pide2015 = pide("2015")
 lazy val pide2016 = pide("2016-RC0")
+
+
+// Third-party integration
+
+lazy val refined = project.in(file("refined"))
+  .dependsOn(setup)
+  .settings(moduleName := "libisabelle-refined")
+  .settings(standardSettings)
+  .settings(warningSettings)
+  .settings(acyclicSettings)
+  .settings(
+    libraryDependencies ++= Seq(
+      logback,
+      "eu.timepit" %% "refined" % "0.3.3"
+    ),
+    initialCommands in console := """
+      import eu.timepit.refined._
+      import eu.timepit.refined.auto._
+      import shapeless.tag.@@
+      import edu.tum.cs.isabelle.hol._
+      import edu.tum.cs.isabelle.refined._
+      import scala.concurrent.ExecutionContext.Implicits.global
+
+      implicit val default: Isabelle = Isabelle.default()"""
+  )
 
 
 // Standalone applications
