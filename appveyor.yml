@@ -1,15 +1,18 @@
+init:
+  - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 install:
   - cinst sbt
   - cmd: SET PATH=%PATH%;"C:\Program Files (x86)\sbt\bin"
   - cmd: git submodule update --init --recursive
 platform:
   - x86
-  - x64
 environment:
   matrix:
     - ISABELLE_VERSION: 2015
-    - ISABELLE_VERSION: 2016-RC0
 build_script:
   - sbt publishLocal
 test_script:
   - sbt "appBootstrap/run --version %ISABELLE_VERSION%"
+  - sbt test
+on_finish:
+  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
