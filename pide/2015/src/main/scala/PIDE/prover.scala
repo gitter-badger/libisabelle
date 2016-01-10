@@ -342,7 +342,7 @@ abstract class Prover(
         while (c != -1)
       }
       catch {
-        case e: IOException => system_output("Cannot read message:\n" + e.getMessage)
+        case e: IOException => system_output("Cannot read message:\n" + e.getMessage); e.printStackTrace()
         case e: Protocol_Error => system_output("Malformed message:\n" + e.getMessage)
       }
       stream.close
