@@ -31,5 +31,8 @@ class System_Channel private
     (socket.getOutputStream, socket.getInputStream)
   }
 
-  def accepted() { server.close }
+  def accepted() {
+    println("*** System_Channel.accepted ***")
+    server.close
+  }
 }

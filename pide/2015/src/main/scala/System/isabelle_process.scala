@@ -22,10 +22,15 @@ object Isabelle_Process
         val process =
           new Isabelle_System.Managed_Process(null, null, false, cmdline: _*) with
             Prover.System_Process
+        println("*** Isabelle_Process.apply: process started ***")
         process.stdin.close
+        println("*** Isabelle_Process.apply: stdin closed ***")
         process
       }
-      catch { case exn @ ERROR(_) => system_channel.accepted(); throw exn }
+      catch { case exn @ ERROR(_) =>
+        println(s"*** Isabelle_Process.apply: exception thrown $exn***")
+        system_channel.accepted(); throw exn
+      }
 
     new Isabelle_Process(receiver, system_channel, system_process)
   }
