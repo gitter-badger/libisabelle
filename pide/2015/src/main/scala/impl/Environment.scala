@@ -73,10 +73,13 @@ final class Environment protected(home: Path) extends api.Environment(home) {
 
     session.all_messages += isabelle.Session.Consumer[isabelle.Prover.Message]("firehose") {
       case msg: isabelle.Prover.Protocol_Output =>
+        logger.info(s"firehose: $msg")
         consumer(destMarkup(msg.message.markup), api.XML.bodyFromYXML(msg.text))
       case msg: isabelle.Prover.Output =>
+        logger.info(s"firehose: $msg")
         consumer(destMarkup(msg.message.markup), msg.message.body.map(convertXML))
-      case _ =>
+      case msg =>
+        logger.info(s"firehose: $msg")
     }
 
     session.start("Isabelle" /* name is ignored anyway */, List("-r", "-q", config.session))

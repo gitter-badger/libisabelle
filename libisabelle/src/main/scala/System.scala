@@ -154,7 +154,9 @@ final class System private(val env: Environment, config: Configuration, callback
   private val session = env.create(config, consumer)
 
   initPromise.future foreach { _ =>
+    org.log4s.getLogger.info(s"sending options")
     env.sendOptions(session)
+    org.log4s.getLogger.info(s"sent options")
     callback()
   }
 
